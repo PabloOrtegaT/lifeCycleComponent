@@ -1,25 +1,47 @@
 import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+//import Constructor from "./components/mounting/Constructor";
+import ComponentWillMount from "./components/mounting/ComponentWillMount";
+import ComponentUpdate from "./components/updating/ComponentUpdate";
+import Counter from "./components/Counter";
+import ErrorBoundry from './components/errorHandling/ErrorBoundry';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      mount: true,
+      ignoreProp: 0,
+      seed: 0,
+      showErrorComponent: false
+    }
+
+    this.mountCounter = () => this.setState({ mount: true })
+    this.unmountCounter = () => this.setState({ mount: false })
+    this.ignoreProp = () => this.setState({ ignoreProp: Math.random() })
+    this.seedGenerator = () => this.setState({ seed: Number.parseInt(Math.random() * 100) })
+    this.toggleError = () => this.setState({ showErrorComponent: !this.state.showErrorComponent })
+  }
+  render(){
+    return <div className="App">
+      <header className= "App-header">
+        <ComponentUpdate />
+          <button onClick={this.mountCounter} disabled={this.state.mount}>Mount counter</button>
+          <button onClick={this.unmountCounter} disabled={!this.state.mount}>Unmount counter</button>
+          <button onClick={this.ignoreProp}>Ignore Prop</button>
+          <button onClick={this.seedGenerator}>Generate Seed</button> 
+          <button onClick={this.toggleError}>toggle Error</button>
+          {this.state.mount ? 
+            <Counter
+            ignoreProp = {this.state.ignoreProp}
+            seed={this.state.seed}
+            showErrorComponent={this.state.showErrorComponent}
+            /> : 
+            null} 
       </header>
     </div>
-  );
+  }
 }
 
 export default App;
